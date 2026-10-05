@@ -1,0 +1,11 @@
+# Files git should never save. Applies to every folder in the project.
+# (mobile/ has its own .gitignore too, for Expo-specific files like node_modules.)
+
+# Secret keys and settings. Never commit these.
+.env
+.env.*
+# ...except the example file, which lists the setting names with no real values
+!.env.example
+
+# Mac system files
+.DS_Store

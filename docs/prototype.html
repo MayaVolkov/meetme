@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>meetme prototype</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --page:#E2E5EB;--bg:#F4F5F7;--surface:#FFFFFF;--ink:#18213A;--muted:#596175;
+  --navy:#1D2B4F;--on-navy:#FFFFFF;--red:#B8322A;--line:#DCDFE6;--chip:#EBEEF4;--chip-on:#DCE3F2;
+  --photo1:#C9D4D0;--photo2:#D9CFBC;--photo3:#C8CFDF;--ok:#2E6B50;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#070A12;--bg:#10141F;--surface:#1A2030;--ink:#EEF0F5;--muted:#A6ADBE;
+    --navy:#9DB1E6;--on-navy:#10141F;--red:#F2857B;--line:#2D3548;--chip:#252C3E;--chip-on:#33405E;
+    --photo1:#34423F;--photo2:#463F33;--photo3:#353C4E;--ok:#7CC3A0;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#070A12;--bg:#10141F;--surface:#1A2030;--ink:#EEF0F5;--muted:#A6ADBE;
+  --navy:#9DB1E6;--on-navy:#10141F;--red:#F2857B;--line:#2D3548;--chip:#252C3E;--chip-on:#33405E;
+  --photo1:#34423F;--photo2:#463F33;--photo3:#353C4E;--ok:#7CC3A0;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--page);color:var(--ink);font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;display:flex;justify-content:center;align-items:center;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.phone{width:100%;max-width:420px;height:100%;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media (min-width:600px){.phone{height:min(860px,calc(100% - 32px));border-radius:28px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(10,20,40,.18)}}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:18px 18px 28px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;min-height:44px}
+.brand{display:flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;color:var(--navy)}
+.brand i{width:24px;height:24px;border-radius:50%;border:2px solid var(--red);display:inline-block;transform:rotate(-10deg)}
+h1{font-size:24px;font-weight:700;margin:0 0 4px;line-height:1.2}
+h2{font-size:16px;font-weight:600;margin:20px 0 10px}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.link{background:none;border:none;color:var(--navy);font-weight:600;padding:10px 4px;min-height:44px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;border-radius:14px;border:none;background:var(--navy);color:var(--on-navy);font-weight:600;font-size:16px;padding:0 16px}
+.btn.secondary{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:10px}
+.grow{flex:1;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.card-pad{padding:12px 14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0 14px;min-height:38px;font-size:14px}
+.chip.on{background:var(--chip-on);border-color:var(--navy);color:var(--navy);font-weight:600}
+.tag.warn{background:transparent;border:1px solid var(--red);color:var(--red)}
+.chip.warn.on{background:transparent;border-color:var(--red);color:var(--red)}
+.tag{background:var(--chip);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:500}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
+.seg button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:14px}
+.seg button.on{border:2px solid var(--navy);background:var(--chip-on);color:var(--navy);font-weight:600}
+.photo{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;height:170px;position:relative}
+.p1{background:var(--photo1)}.p2{background:var(--photo2)}.p3{background:var(--photo3)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--navy);color:var(--on-navy);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.stamp{width:54px;height:54px;border-radius:50%;border:2px solid var(--red);color:var(--red);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-7deg);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;line-height:1;flex-shrink:0}
+.stamp small{font-family:'Figtree',sans-serif;font-size:8px;font-weight:600;margin-top:1px}
+.photo .stamp{position:absolute;right:12px;bottom:-22px;width:62px;height:62px;font-size:24px}
+.stamp.big{width:190px;height:190px;border-width:4px;box-shadow:inset 0 0 0 7px var(--surface),inset 0 0 0 9px var(--red);font-size:64px;transform:rotate(-10deg)}
+.stamp.big small{font-size:12px;margin-top:4px}
+@keyframes thud{0%{transform:rotate(-10deg) scale(1.7);opacity:0}60%{transform:rotate(-10deg) scale(.95);opacity:1}100%{transform:rotate(-10deg) scale(1);opacity:1}}
+.thud{animation:thud .45s ease-out .2s both}
+@media (prefers-reduced-motion: reduce){.thud{animation:none}}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:12px;align-items:flex-start}
+.rank{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:var(--navy);width:26px;text-align:center;flex-shrink:0;line-height:1.3}
+.name{font-weight:600;font-size:15px}
+.pending{display:inline-block;margin-top:6px;font-size:12px;color:var(--ok);font-weight:600}
+.danger{color:var(--red)}
+.tabs{display:flex;justify-content:space-around;align-items:center;background:var(--surface);border-top:1px solid var(--line);min-height:72px;padding:6px 0}
+.tabs button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--muted);min-width:64px;min-height:48px;justify-content:center}
+.tabs button.on{color:var(--navy);font-weight:700}
+.tabs .plus{width:56px;height:56px;border-radius:50%;background:var(--navy);color:var(--on-navy);font-size:30px;line-height:1;box-shadow:inset 0 0 0 3px var(--navy),inset 0 0 0 5px var(--surface)}
+.toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;white-space:nowrap;z-index:5}
+.choice{display:flex;flex-direction:column;text-align:left;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:18px;overflow:hidden;padding:0}
+.choice:hover{border-color:var(--navy)}
+.choice .photo{height:120px;width:100%}
+.big-react{min-height:64px;font-size:18px;font-weight:600;border-radius:16px;border:1px solid var(--line);background:var(--surface);text-align:left;padding:0 18px}
+.big-react:hover{border-color:var(--navy)}
+input[type=search],input[type=text],select,textarea{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:10px 14px;font-size:16px}
+textarea{resize:vertical;min-height:80px}
+label.lbl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.result{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:var(--surface);border:none;border-bottom:1px solid var(--line);padding:12px 14px;min-height:56px}
+.result:last-child{border-bottom:none}
+.result:disabled{opacity:.5;cursor:default}
+.browser{background:var(--surface);border-bottom:1px solid var(--line);padding:10px 14px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px}
+.browser span{flex:1;background:var(--chip);border-radius:8px;padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cta{position:sticky;bottom:0;margin:16px -18px -28px;background:var(--surface);border-top:1px solid var(--line);padding:14px 18px 18px}
+.progress{height:6px;background:var(--line);border-radius:3px;margin:6px 0 16px}
+.progress div{height:6px;background:var(--navy);border-radius:3px}
+.note{background:var(--chip);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.45}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="phone" id="app" aria-live="polite"></div>
+<script>
+const CATS={
+  hostel:{label:'Hostels',one:'hostel',tags:['social','quiet','party','good for solo','cheap','great staff','good location','good wifi','free breakfast'],warn:['loud at night','not very clean','uncomfortable beds','far from everything','unfriendly staff','bad wifi','overpriced']},
+  restaurant:{label:'Food',one:'food spot',tags:['cheap','local favourite','street food','vegetarian-friendly','big portions','good for groups','worth the splurge'],warn:['overpriced','slow service','tourist trap','long wait','small portions']},
+  beach:{label:'Beaches',one:'beach',tags:['quiet','lively','good for swimming','surfing','snorkelling','hard to reach','worth the trip'],warn:['crowded','dirty','rough water','pushy vendors','nowhere to get food']},
+  activity:{label:'Activities',one:'activity',tags:['free','cheap','must-do','hidden gem','needs a guide','good with a group','tough but worth it','food included','worth the splurge'],warn:['overpriced','tourist trap','too crowded','not worth the time','bad guide']}
+};
+const BANDS={loved:[7,10],fine:[4,7],disliked:[0,4]};
+const REACT={loved:'Loved it',fine:'It was fine',disliked:"Didn't like it"};
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const FRIENDS=['Noa','Liam','Tamar'];
+const CATALOG=[
+  {id:'h1',name:'Aegean Nest Hostel',city:'Paros',country:'Greece',cat:'hostel'},
+  {id:'h2',name:'Casa Selva Hostel',city:'Tulum',country:'Mexico',cat:'hostel'},
+  {id:'h3',name:'Jardín Azul Hostel',city:'Oaxaca',country:'Mexico',cat:'hostel'},
+  {id:'h4',name:'Acropolis Backpackers',city:'Athens',country:'Greece',cat:'hostel'},
+  {id:'h5',name:'Hostal del Centro',city:'Mexico City',country:'Mexico',cat:'hostel'},
+  {id:'h6',name:'Party House Puerto',city:'Puerto Escondido',country:'Mexico',cat:'hostel'},
+  {id:'r1',name:'Tacos Don Beto',city:'Mexico City',country:'Mexico',cat:'restaurant'},
+  {id:'r2',name:'Taverna Kostas',city:'Paros',country:'Greece',cat:'restaurant'},
+  {id:'r3',name:'Café Luna',city:'Tulum',country:'Mexico',cat:'restaurant'},
+  {id:'b1',name:'Kapsali Cove',city:'Athens Riviera',country:'Greece',cat:'beach'},
+  {id:'b2',name:'Playa Escondida',city:'Tulum',country:'Mexico',cat:'beach'},
+  {id:'a1',name:'Cenote snorkelling tour',city:'Tulum',country:'Mexico',cat:'activity'},
+  {id:'a2',name:'Acropolis walking tour',city:'Athens',country:'Greece',cat:'activity'},
+  {id:'n1',name:'Laguna House Hostel',city:'Bacalar',country:'Mexico',cat:'hostel'},
+  {id:'n2',name:'Naxos Sunset Hostel',city:'Naxos',country:'Greece',cat:'hostel'},
+  {id:'n3',name:'Mercado 20 de Noviembre',city:'Oaxaca',country:'Mexico',cat:'restaurant'},
+  {id:'n4',name:'Plaka Beach',city:'Naxos',country:'Greece',cat:'beach'},
+  {id:'n5',name:'Bioluminescent kayak tour',city:'Holbox',country:'Mexico',cat:'activity'},
+  {id:'n6',name:'Souvlaki Corner',city:'Athens',country:'Greece',cat:'restaurant'},
+  {id:'n7',name:'Selva Verde Hostel',city:'Medellín',country:'Colombia',cat:'hostel'}
+];
+const SEED=[
+  {p:'h1',r:'loved',v:'2026-06',t:['social','great staff'],tip:'Rooftop sunset every night. Book the 4-bed dorm.'},
+  {p:'h2',r:'loved',v:'2025-12',t:['social','good for solo','cheap'],tip:'Family dinner every night, go to it.'},
+  {p:'h3',r:'loved',v:'2025-12',t:['quiet','good location'],tip:'Garden is the best place in Oaxaca to read.'},
+  {p:'h4',r:'fine',v:'2026-06',t:['good location','cheap'],w:['loud at night'],tip:'Loud street side, ask for the back rooms.'},
+  {p:'h5',r:'fine',v:'2025-12',t:['cheap'],tip:''},
+  {p:'h6',r:'disliked',v:'2025-12',t:['party'],w:['loud at night','not very clean'],tip:'Fun for one night, impossible to sleep.'},
+  {p:'r1',r:'loved',v:'2025-12',t:['cheap','street food','local favourite'],tip:'Get the al pastor, cash only.'},
+  {p:'r2',r:'loved',v:'2026-06',t:['local favourite','big portions'],tip:''},
+  {p:'r3',r:'fine',v:'2025-12',t:['good for groups'],tip:''},
+  {p:'b1',r:'loved',v:'2026-06',t:['quiet','hard to reach','worth the trip'],tip:'Take the bus to the end of the line, then walk 20 minutes.'},
+  {p:'b2',r:'loved',v:'2025-12',t:['quiet','good for swimming'],tip:''},
+  {p:'a1',r:'loved',v:'2025-12',t:['needs a guide','food included','worth the splurge'],tip:'Pricier than others, but lunch is included.'},
+  {p:'a2',r:'fine',v:'2026-06',t:['cheap'],w:['too crowded'],tip:'Go at 8am before the heat.'}
+];
+const FEED=[
+  {who:'Noa',place:'Casa Pájaro Hostel',where:'Salento, Colombia',cat:'hostel',score:9.3,rank:'#1 in Colombia',tags:['social','good for solo'],tip:'Coffee farm tour leaves from the front desk at 9.',ago:'3h ago',ph:'p1'},
+  {who:'Liam',place:'Playa Cristal',where:'Tayrona, Colombia',cat:'beach',score:8.8,rank:'#1 in Colombia',tags:['hard to reach','worth the trip'],tip:'Go early, the boats fill up.',ago:'1d ago',ph:'p2'},
+  {who:'Tamar',place:'Arepas at the plaza',where:'Cartagena, Colombia',cat:'restaurant',score:7.9,rank:'#2 in Colombia',tags:['cheap','street food'],tip:'Cash only, the cart shows up around 6.',ago:'2d ago',ph:'p3'}
+];
+const NOA_LIST={
+  hostel:[{n:'Casa Pájaro Hostel',c:'Salento',s:9.3,m:'Sep 2026',tip:'Coffee farm tour leaves from the front desk at 9.'},{n:'Mango Tree Hostel',c:'Cartagena',s:7.4,m:'Aug 2026',tip:'Pool is great, dorms are hot.'}],
+  restaurant:[{n:'Bandeja Paisa place',c:'Medellín',s:8.9,m:'Aug 2026',tip:'One plate feeds two people.'}],
+  beach:[{n:'Playa Cristal',c:'Tayrona',s:9.0,m:'Sep 2026',tip:'Bring snorkel gear.'}],
+  activity:[{n:'Comuna 13 graffiti tour',c:'Medellín',s:9.5,m:'Aug 2026',tip:'Free walking tour, tip the guide.'},{n:'Valle de Cocora hike',c:'Salento',s:8.7,m:'Sep 2026',tip:'Start before 8 to beat the clouds.'}]
+};
+const KEY='meetme-proto-v2';
+
+function seedData(empty){
+  const places={};CATALOG.forEach(p=>places[p.id]=Object.assign({},p));
+  const logs={};const order={hostel:[],restaurant:[],beach:[],activity:[]};
+  if(!empty){SEED.forEach(s=>{const id='l_'+s.p;logs[id]={id,placeId:s.p,reaction:s.r,visit:s.v,tags:s.t.slice(),warn:(s.w||[]).slice(),tip:s.tip,vis:'friends',photo:true,availableAt:0};order[places[s.p].cat].push(id);});}
+  return {places,logs,order};
+}
+function load(){try{const raw=localStorage.getItem(KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+let data=load()||seedData(false);
+let ui={screen:'feed',tab:'feed',mode:'country',country:null,cat:'hostel',allCat:'hostel',draft:null,cmp:null,toast:null,confirmDel:null,share:null,shareTo:[],q:'',pin:false,stampId:null};
+let toastTimer=null;
+
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtMonth=v=>{const [y,m]=v.split('-');return MONTHS[+m-1]+' '+y;};
+const nowMonth=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');};
+const place=log=>data.places[log.placeId];
+const visible=log=>!log.availableAt||Date.now()>=log.availableAt;
+
+/* Ranking: each category list is ordered best to worst, grouped by reaction. */
+function ranked(cat){
+  const g={loved:[],fine:[],disliked:[]};
+  data.order[cat].forEach(id=>{const l=data.logs[id];if(l)g[l.reaction].push(id);});
+  return g.loved.concat(g.fine,g.disliked);
+}
+function group(cat,reaction){return ranked(cat).filter(id=>data.logs[id].reaction===reaction);}
+function score(id){
+  const l=data.logs[id];const g=group(place(l).cat,l.reaction);
+  const j=g.indexOf(id),m=g.length;const [lo,hi]=BANDS[l.reaction];
+  return Math.round((hi-(hi-lo)*(j+0.5)/m)*10)/10;
+}
+function countryRank(id){
+  const l=data.logs[id];const p=place(l);
+  return ranked(p.cat).filter(x=>place(data.logs[x]).country===p.country).indexOf(id)+1;
+}
+function countries(){
+  const seen={};Object.values(data.logs).forEach(l=>{const c=place(l).country;if(!seen[c]||l.visit>seen[c])seen[c]=l.visit;});
+  return Object.keys(seen).sort((a,b)=>seen[b].localeCompare(seen[a]));
+}
+function insertLog(log,pos){
+  const cat=place(log).cat;data.logs[log.id]=log;
+  const g={loved:[],fine:[],disliked:[]};data.order[cat].forEach(id=>{const l=data.logs[id];if(l&&id!==log.id)g[l.reaction].push(id);});
+  g[log.reaction].splice(pos,0,log.id);data.order[cat]=g.loved.concat(g.fine,g.disliked);
+}
+
+function toast(msg){ui.toast=msg;render();clearTimeout(toastTimer);toastTimer=setTimeout(()=>{ui.toast=null;render();},2200);}
+
+/* ---------- screens ---------- */
+function stamp(s,label,cls){return `<div class="stamp ${cls||''}" aria-label="Score ${s} out of 10">${s.toFixed(1)}${label?`<small>${esc(label)}</small>`:''}</div>`;}
+function tagList(tags,warn){tags=tags||[];warn=warn||[];return tags.length||warn.length?`<div class="chips" style="margin-top:6px">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}${warn.map(t=>`<span class="tag warn"><span class="sr">Heads up: </span>${esc(t)}</span>`).join('')}</div>`:'';}
+
+function feed(){
+  return `<div class="top"><div class="brand"><i aria-hidden="true"></i>meetme</div><span class="muted small">Friends</span></div>
+  <div class="card card-pad row" style="margin-bottom:14px">
+    <div class="avatar">N</div>
+    <div class="grow"><div class="name">Noa sent you her Colombia list</div><div class="muted small">6 places: hostels, food, beaches, activities</div></div>
+    <button class="link" data-a="openNoa">Open</button>
+  </div>
+  <div class="stack" style="gap:16px">${FEED.map(f=>`
+    <article class="card">
+      <div class="card-pad row"><div class="avatar">${f.who[0]}</div><div class="grow"><div><strong>${f.who}</strong> logged <strong>${esc(f.place)}</strong></div><div class="muted small">${esc(f.where)}, ${f.ago}</div></div></div>
+      <div class="photo ${f.ph}">Photo${stamp(f.score,CATS[f.cat].one+' '+f.rank.split(' ')[0])}</div>
+      <div class="card-pad" style="padding-top:16px"><div class="muted small">${esc(f.rank)}</div>${tagList(f.tags)}${f.tip?`<p style="margin-top:8px;line-height:1.45">${esc(f.tip)}</p>`:''}</div>
+    </article>`).join('')}</div>`;
+}
+
+function noaList(){
+  return `<div class="top"><button class="link" data-a="go" data-to="feed">Back</button><span></span></div>
+  <h1>Noa's Colombia</h1><p class="muted small">Shared with you. Months only, no exact dates.</p>
+  ${Object.keys(NOA_LIST).map(cat=>`<h2>${CATS[cat].label}</h2><ol class="list">${NOA_LIST[cat].map((x,i)=>`
+    <li class="item"><div class="rank">${i+1}</div><div class="grow"><div class="name">${esc(x.n)}</div><div class="muted small">${esc(x.c)}, ${x.m}</div>${x.tip?`<p class="small" style="margin-top:6px;line-height:1.4">${esc(x.tip)}</p>`:''}</div>${stamp(x.s)}</li>`).join('')}</ol>`).join('')}
+  <div style="margin-top:20px"><button class="btn" data-a="saveNoa">Save list for my trip</button></div>`;
+}
+
+function itemRow(id,showCountry){
+  const l=data.logs[id],p=place(l),s=score(id);
+  if(ui.confirmDel===id){
+    return `<li class="item" style="flex-direction:column;align-items:stretch"><div class="name">Delete ${esc(p.name)}?</div><p class="muted small" style="margin:4px 0 10px">It disappears from your lists and friends' feeds. Places below it move up.</p>
+    <div class="row"><button class="btn secondary" data-a="cancelDel">Keep it</button><button class="btn" style="background:var(--red);color:var(--surface)" data-a="del" data-id="${id}">Delete</button></div></li>`;
+  }
+  const rk=showCountry?ranked(p.cat).indexOf(id)+1:countryRank(id);
+  const pend=!visible(l)?`<span class="pending">Friends see this ${new Date(l.availableAt).toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'})}</span>`:'';
+  return `<li class="item"><div class="rank">${rk}</div><div class="grow"><div class="name">${esc(p.name)}</div>
+    <div class="muted small">${esc(p.city)}${showCountry?', '+esc(p.country):''}, ${fmtMonth(l.visit)}${l.vis==='public'?', public':''}</div>${tagList(l.tags,l.warn)}${pend}
+    <button class="link small danger" style="min-height:36px;padding:6px 0 0" data-a="askDel" data-id="${id}">Delete</button></div>${stamp(s)}</li>`;
+}
+
+function profile(){
+  const cs=countries();const n=Object.keys(data.logs).length;
+  if(!ui.country||!cs.includes(ui.country))ui.country=cs[0]||null;
+  let body='';
+  if(n===0){
+    body=`<div class="card card-pad" style="text-align:center;padding:28px 18px;margin-top:10px"><div class="name" style="font-size:18px">Where have you been?</div><p class="muted" style="margin:8px 0 16px;line-height:1.45">Log places from past trips to build your map and share your favourites with friends heading there.</p><button class="btn" data-a="startLog">Log a place</button></div>`;
+  } else if(ui.mode==='country'){
+    const inCountry=cat=>ranked(cat).filter(id=>place(data.logs[id]).country===ui.country);
+    const ids=inCountry(ui.cat);
+    body=`<div class="chips" role="group" aria-label="Country">${cs.map(c=>`<button class="chip ${c===ui.country?'on':''}" data-a="country" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <div class="seg" style="margin-top:12px" role="group" aria-label="Category">${Object.keys(CATS).map(k=>`<button class="${k===ui.cat?'on':''}" data-a="cat" data-v="${k}">${CATS[k].label} <span class="muted">${inCountry(k).length}</span></button>`).join('')}</div>
+    <h2>Your ${CATS[ui.cat].label.toLowerCase()} in ${esc(ui.country)}</h2>
+    ${ids.length?`<ol class="list">${ids.map(id=>itemRow(id,false)).join('')}</ol>`:`<p class="muted">No ${CATS[ui.cat].label.toLowerCase()} logged in ${esc(ui.country)} yet.</p>`}
+    <div style="margin-top:18px"><button class="btn" data-a="share" data-v="${esc(ui.country)}">Share my ${esc(ui.country)} list</button></div>`;
+  } else {
+    const ids=ranked(ui.allCat);
+    body=`<div class="seg" role="group" aria-label="Category">${Object.keys(CATS).map(k=>`<button class="${k===ui.allCat?'on':''}" data-a="allCat" data-v="${k}">${CATS[k].label}</button>`).join('')}</div>
+    <h2>All your ${CATS[ui.allCat].label.toLowerCase()}, everywhere</h2>
+    ${ids.length?`<ol class="list">${ids.map(id=>itemRow(id,true)).join('')}</ol>`:`<p class="muted">Nothing here yet.</p>`}`;
+  }
+  return `<div class="top"><div class="row"><div class="avatar" style="width:48px;height:48px;font-size:20px">M</div><div><h1 style="margin:0">Maya</h1><div class="muted small">${cs.length} ${cs.length===1?'country':'countries'}, ${n} places</div></div></div></div>
+  ${n?`<div class="seg" style="margin-bottom:14px"><button class="${ui.mode==='country'?'on':''}" data-a="mode" data-v="country">By country</button><button class="${ui.mode==='all'?'on':''}" data-a="mode" data-v="all">All-time</button></div>`:''}
+  ${body}
+  <div class="note" style="margin-top:24px">Testing tools: <button class="link small" style="min-height:36px" data-a="reset" data-v="seed">Reset sample data</button> or <button class="link small" style="min-height:36px" data-a="reset" data-v="empty">start as a new user</button></div>`;
+}
+
+function stepHead(step,back){
+  return `<div class="top"><button class="link" data-a="${back?'go':'cancel'}" ${back?`data-to="${back}"`:''}>${back?'Back':'Cancel'}</button><span class="muted small">Step ${step} of 5</span></div><div class="progress"><div style="width:${step*20}%"></div></div>`;
+}
+
+function results(){
+  const q=ui.q.trim().toLowerCase();
+  const loggedPlaces=new Set(Object.values(data.logs).map(l=>l.placeId));
+  const list=Object.values(data.places).filter(p=>!q||(p.name+' '+p.city+' '+p.country).toLowerCase().includes(q)).slice(0,8);
+  if(!list.length)return `<p class="muted card-pad">No matches. Try dropping a pin.</p>`;
+  return list.map(p=>{const done=loggedPlaces.has(p.id);return `<button class="result" data-a="pick" data-id="${p.id}" ${done?'disabled':''}><span><span class="name">${esc(p.name)}</span><br><span class="muted small">${esc(p.city)}, ${esc(p.country)}</span></span><span class="muted small">${done?'Already logged':CATS[p.cat].one}</span></button>`;}).join('');
+}
+
+function logPlace(){
+  return `${stepHead(1)}<h1>Where were you?</h1>
+  <label class="lbl" for="q">Search places</label><input id="q" type="search" data-in="q" value="${esc(ui.q)}" placeholder="Try Naxos, Bacalar, or kayak" autocomplete="off">
+  <div class="card" style="margin-top:10px" id="results">${results()}</div>
+  ${ui.pin?`<div class="card card-pad" style="margin-top:14px"><div class="name">Drop a pin</div><p class="muted small">For places Google doesn't list, like a hidden beach or a street cart.</p>
+    <label class="lbl" for="pinName">Name</label><input id="pinName" type="text" placeholder="Empanada cart by the pier">
+    <label class="lbl" for="pinCity">City or area</label><input id="pinCity" type="text" placeholder="Puerto Escondido">
+    <label class="lbl" for="pinCountry">Country</label><input id="pinCountry" type="text" placeholder="Mexico">
+    <label class="lbl" for="pinCat">Category</label><select id="pinCat">${Object.keys(CATS).map(k=>`<option value="${k}">${CATS[k].one}</option>`).join('')}</select>
+    <div style="margin-top:14px"><button class="btn" data-a="pinSave">Use this place</button></div></div>`
+  :`<button class="link" style="margin-top:8px" data-a="pinOpen">Not listed? Drop a pin</button>`}`;
+}
+
+function logDetails(){
+  const d=ui.draft,p=data.places[d.placeId];
+  const years=[2024,2025,2026];
+  const [vy,vm]=d.month.split('-');
+  return `${stepHead(2,'log-place')}<h1>${esc(p.name)}</h1><p class="muted">${esc(p.city)}, ${esc(p.country)}</p>
+  <label class="lbl">Category (filled in from the map, change if it's wrong)</label>
+  <div class="chips">${Object.keys(CATS).map(k=>`<button class="chip ${k===d.cat?'on':''}" data-a="dcat" data-v="${k}">${CATS[k].one}</button>`).join('')}</div>
+  <label class="lbl">Photo (optional)</label>
+  ${d.photo?`<div class="card"><div class="photo p1">Your photo</div></div><button class="link" data-a="photo">Remove photo</button>`:`<button class="btn secondary" data-a="photo">Add a photo</button>`}
+  <label class="lbl">When were you there?</label>
+  <div class="seg"><button class="${d.visitMode==='now'?'on':''}" data-a="visit" data-v="now">I'm here now</button><button class="${d.visitMode==='past'?'on':''}" data-a="visit" data-v="past">On a past trip</button></div>
+  ${d.visitMode==='past'?`<div class="row" style="margin-top:10px"><label class="sr" for="vm">Month</label><select id="vm" data-in="vm">${MONTHS.map((m,i)=>`<option value="${String(i+1).padStart(2,'0')}" ${String(i+1).padStart(2,'0')===vm?'selected':''}>${m}</option>`).join('')}</select><label class="sr" for="vy">Year</label><select id="vy" data-in="vy">${years.map(y=>`<option ${String(y)===vy?'selected':''}>${y}</option>`).join('')}</select></div>`:''}
+  <div style="margin-top:22px"><button class="btn" data-a="go" data-to="log-react">Next</button></div>`;
+}
+
+function logReact(){
+  const p=data.places[ui.draft.placeId];
+  return `${stepHead(3,'log-details')}<h1>How was ${esc(p.name)}?</h1><p class="muted" style="margin-bottom:16px">Go with your gut. You'll fine-tune it next.</p>
+  <div class="stack">${Object.keys(REACT).map(k=>`<button class="big-react" data-a="react" data-v="${k}">${REACT[k]}</button>`).join('')}</div>`;
+}
+
+function logCompare(){
+  const d=ui.draft,c=ui.cmp,p=data.places[d.placeId];
+  const mid=Math.floor((c.lo+c.hi)/2),otherId=c.group[mid],o=data.logs[otherId],op=place(o);
+  const left=Math.max(0,Math.ceil(Math.log2(c.hi-c.lo+1))-1);
+  return `${stepHead(3,'log-react')}<h1>Which would you rather send a friend to?</h1>
+  <p class="muted small" style="margin-bottom:14px">Comparing with your other ${CATS[d.cat].label.toLowerCase()} you ${d.reaction==='loved'?'loved':d.reaction==='fine'?'thought were fine':"didn't like"}. ${left?`About ${left} more after this.`:'Last one.'}</p>
+  <div class="stack">
+    <button class="choice" data-a="cmp" data-v="better"><div class="photo p1">${d.photo?'Your photo':'No photo'}</div><div class="card-pad"><div class="name">${esc(p.name)}</div><div class="muted small">${esc(p.city)}, ${esc(p.country)}, new</div></div></button>
+    <div class="muted" style="text-align:center;font-weight:600">or</div>
+    <button class="choice" data-a="cmp" data-v="worse"><div class="photo p2">Photo</div><div class="card-pad"><div class="name">${esc(op.name)}</div><div class="muted small">${esc(op.city)}, ${esc(op.country)}, ${fmtMonth(o.visit)}</div>${o.tip?`<div class="small" style="margin-top:4px">${esc(o.tip)}</div>`:''}</div></button>
+  </div>
+  <div class="row" style="margin-top:14px"><button class="btn secondary" data-a="cmp" data-v="tie">Too close to call</button><button class="btn secondary" data-a="cmp" data-v="skip">Skip</button></div>`;
+}
+
+function logTags(){
+  const d=ui.draft;
+  return `${stepHead(4,'log-react')}<h1>Best for</h1><p class="muted" style="margin-bottom:12px">Optional. Tap any that fit.</p>
+  <div class="chips">${CATS[d.cat].tags.map(t=>`<button class="chip ${d.tags.includes(t)?'on':''}" data-a="tag" data-v="${esc(t)}" aria-pressed="${d.tags.includes(t)}">${esc(t)}</button>`).join('')}</div>
+  <h2>Heads up</h2><p class="muted small" style="margin-bottom:10px">Anything the next person should know before going.</p>
+  <div class="chips">${CATS[d.cat].warn.map(t=>`<button class="chip warn ${d.warn.includes(t)?'on':''}" data-a="warn" data-v="${esc(t)}" aria-pressed="${d.warn.includes(t)}">${esc(t)}</button>`).join('')}</div>
+  <label class="lbl" for="tip">Tip for the next person (optional)</label>
+  <textarea id="tip" data-in="tip" placeholder="Ask for the upstairs dorm, or warn about anything serious">${esc(d.tip)}</textarea>
+  <div style="margin-top:22px"><button class="btn" data-a="go" data-to="log-share">Next</button></div>`;
+}
+
+function logShare(){
+  const d=ui.draft;const month=d.visitMode==='now'?nowMonth():d.month;
+  return `${stepHead(5,'log-tags')}<h1>Who sees this?</h1>
+  <div class="seg" style="margin-top:14px"><button class="${d.vis==='friends'?'on':''}" data-a="vis" data-v="friends">Friends only</button><button class="${d.vis==='public'?'on':''}" data-a="vis" data-v="public">Public too</button></div>
+  ${d.vis==='public'?`<p class="note" style="margin-top:10px">Your friends see the full log. The public review shows only "${fmtMonth(month)}" and doesn't link to your other places.</p>`:''}
+  ${d.visitMode==='now'?`<label class="lbl">Show it to friends</label>
+    <div class="seg">${['now','24h','48h','72h'].map(x=>`<button class="${d.delay===x?'on':''}" data-a="delay" data-v="${x}">${x==='now'?'Now':x}</button>`).join('')}</div>
+    <p class="muted small" style="margin-top:8px">A delay keeps your exact location private while you're still nearby.</p>`
+  :`<p class="note" style="margin-top:14px">Past visits post right away, dated ${fmtMonth(month)}.</p>`}
+  <div style="margin-top:24px"><button class="btn" data-a="post">Post</button></div>`;
+}
+
+function stamped(){
+  const l=data.logs[ui.stampId];if(!l)return feed();
+  const p=place(l),s=score(l.id),rk=countryRank(l.id);
+  const total=ranked(p.cat).filter(x=>place(data.logs[x]).country===p.country).length;
+  const when=visible(l)?'Your friends can see it now.':'Your friends will see it in '+l.delayLabel+'.';
+  return `<div style="text-align:center;padding-top:20px">
+    <p class="muted small">${esc(p.country)}, ${fmtMonth(l.visit)}</p>
+    <div style="display:flex;justify-content:center;margin:28px 0 30px"><div class="stamp big thud">${s.toFixed(1)}<small>${esc(CATS[p.cat].one)} #${rk}</small></div></div>
+    <h1>Stamped</h1>
+    <p style="margin:6px 0 4px;font-size:17px">${esc(p.name)} is #${rk} of your ${total} ${CATS[p.cat].label.toLowerCase()} in ${esc(p.country)}.</p>
+    <p class="muted">${when}</p></div>
+  <div class="stack" style="margin-top:28px"><button class="btn" data-a="viewList" data-id="${l.id}">See my ${esc(p.country)} list</button><button class="btn secondary" data-a="startLog">Log another place</button></div>`;
+}
+
+function shareScreen(){
+  const c=ui.share;const ids=Object.values(data.logs).filter(l=>place(l).country===c);
+  const hidden=ids.filter(l=>!visible(l)).length;
+  return `<div class="top"><button class="link" data-a="go" data-to="profile">Back</button><span></span></div>
+  <h1>Share your ${esc(c)} list</h1><p class="muted">${ids.length-hidden} places, ranked, with your tips.</p>
+  <h2>Send to a friend on meetme</h2>
+  <div class="chips">${FRIENDS.map(f=>`<button class="chip ${ui.shareTo.includes(f)?'on':''}" data-a="friend" data-v="${f}" aria-pressed="${ui.shareTo.includes(f)}">${f}</button>`).join('')}</div>
+  <div style="margin-top:12px"><button class="btn" data-a="send" ${ui.shareTo.length?'':'disabled'}>Send</button></div>
+  <h2>Or share a link</h2><p class="muted small" style="margin-bottom:10px">Anyone with the link can see this list, no account needed. You can turn the link off anytime.</p>
+  <div class="stack"><button class="btn secondary" data-a="copy">Copy link</button><button class="btn secondary" data-a="go" data-to="preview">Preview what they'll see</button></div>
+  <div class="note" style="margin-top:18px">Shared lists show months, never exact dates.${hidden?` ${hidden} recent ${hidden===1?'place is':'places are'} hidden until ${hidden===1?'its':'their'} delay passes.`:''}</div>`;
+}
+
+function preview(){
+  const c=ui.share;
+  const byCat=Object.keys(CATS).map(cat=>({cat,ids:ranked(cat).filter(id=>{const l=data.logs[id];return place(l).country===c&&visible(l);})})).filter(x=>x.ids.length);
+  const count=byCat.reduce((a,x)=>a+x.ids.length,0);
+  return `<div class="browser" style="margin:-18px -18px 16px"><button class="link small" data-a="go" data-to="share">Close</button><span>meetme.app/maya/${esc(c.toLowerCase())}</span></div>
+  <p class="muted small">Shared from meetme</p><h1>Maya's ${esc(c)}</h1><p class="muted">${count} places, ranked from her trip</p>
+  ${byCat.map(x=>`<h2>${CATS[x.cat].label}</h2><ol class="list">${x.ids.map((id,i)=>{const l=data.logs[id],p=place(l);return `<li class="item"><div class="rank">${i+1}</div><div class="grow"><div class="name">${esc(p.name)}</div><div class="muted small">${esc(p.city)}, ${fmtMonth(l.visit)}</div>${tagList(l.tags,l.warn)}${l.tip?`<p class="small" style="margin-top:6px;line-height:1.4">${esc(l.tip)}</p>`:''}</div>${stamp(score(id))}</li>`;}).join('')}</ol>`).join('')}
+  <div class="cta"><div class="name">See more of Maya's recommendations on meetme</div><p class="muted small" style="margin:4px 0 12px">Save this list, add Maya as a friend, and see public rankings.</p><button class="btn" data-a="fakeSignup">Save this list</button></div>`;
+}
+
+const SCREENS={feed,noa:noaList,profile,'log-place':logPlace,'log-details':logDetails,'log-react':logReact,'log-compare':logCompare,'log-tags':logTags,'log-share':logShare,stamped,share:shareScreen,preview};
+const NAV_SCREENS=['feed','noa','profile','share'];
+
+function render(){
+  const app=document.getElementById('app');
+  const active=document.activeElement;const focusId=active&&active.id;
+  const nav=NAV_SCREENS.includes(ui.screen)?`<nav class="tabs" aria-label="Main">
+    <button class="${ui.tab==='feed'?'on':''}" data-a="tab" data-v="feed" aria-label="Feed"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Feed</button>
+    <button class="plus" data-a="startLog" aria-label="Log a place">+</button>
+    <button class="${ui.tab==='profile'?'on':''}" data-a="tab" data-v="profile" aria-label="Profile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profile</button>
+  </nav>`:'';
+  app.innerHTML=`<main class="screen" id="screen">${SCREENS[ui.screen]()}</main>${nav}${ui.toast?`<div class="toast" role="status">${esc(ui.toast)}</div>`:''}`;
+  if(focusId){const el=document.getElementById(focusId);if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA')){el.focus();try{const v=el.value;el.setSelectionRange(v.length,v.length);}catch(e){}}}
+}
+function go(screen){ui.screen=screen;ui.confirmDel=null;render();const s=document.getElementById('screen');if(s)s.scrollTop=0;}
+
+function act(a,el){
+  const v=el.dataset.v,id=el.dataset.id;const d=ui.draft;
+  switch(a){
+    case 'tab':ui.tab=v;go(v);break;
+    case 'go':go(el.dataset.to);break;
+    case 'cancel':ui.draft=null;go(ui.tab);break;
+    case 'openNoa':go('noa');break;
+    case 'saveNoa':toast("Saved Noa's Colombia list");break;
+    case 'startLog':ui.draft=null;ui.q='';ui.pin=false;go('log-place');break;
+    case 'pinOpen':ui.pin=true;render();break;
+    case 'pinSave':{
+      const name=document.getElementById('pinName').value.trim(),city=document.getElementById('pinCity').value.trim(),country=document.getElementById('pinCountry').value.trim(),cat=document.getElementById('pinCat').value;
+      if(!name||!country){toast('Add a name and a country');return;}
+      const pid='c'+Date.now();data.places[pid]={id:pid,name,city:city||country,country,cat};save();startDraft(pid);break;
+    }
+    case 'pick':startDraft(id);break;
+    case 'dcat':d.cat=v;render();break;
+    case 'photo':d.photo=!d.photo;render();break;
+    case 'visit':d.visitMode=v;render();break;
+    case 'react':{
+      d.reaction=v;
+      if(d.cat!==data.places[d.placeId].cat)data.places[d.placeId].cat=d.cat;
+      const g=group(d.cat,v);
+      if(!g.length){d.pos=0;go('log-tags');}
+      else{ui.cmp={group:g,lo:0,hi:g.length};go('log-compare');}
+      break;
+    }
+    case 'cmp':{
+      const c=ui.cmp,mid=Math.floor((c.lo+c.hi)/2);
+      if(v==='better')c.hi=mid;else if(v==='worse')c.lo=mid+1;else if(v==='tie'){c.lo=c.hi=mid+1;}else{c.lo=c.hi=mid;}
+      if(c.lo>=c.hi){d.pos=c.lo;go('log-tags');}else render();
+      break;
+    }
+    case 'warn':d.warn=d.warn.includes(v)?d.warn.filter(t=>t!==v):d.warn.concat(v);render();break;
+    case 'tag':d.tags=d.tags.includes(v)?d.tags.filter(t=>t!==v):d.tags.concat(v);render();break;
+    case 'vis':d.vis=v;render();break;
+    case 'delay':d.delay=v;render();break;
+    case 'post':{
+      const lid='l_'+Date.now();const now=d.visitMode==='now';
+      const hrs=now&&d.delay!=='now'?parseInt(d.delay,10):0;
+      const log={id:lid,placeId:d.placeId,reaction:d.reaction,visit:now?nowMonth():d.month,tags:d.tags,warn:d.warn,tip:d.tip.trim(),vis:d.vis,photo:d.photo,availableAt:hrs?Date.now()+hrs*3600000:0,delayLabel:hrs?hrs+' hours':''};
+      insertLog(log,d.pos||0);save();ui.stampId=lid;ui.draft=null;go('stamped');break;
+    }
+    case 'viewList':{const l=data.logs[id];const p=place(l);ui.tab='profile';ui.mode='country';ui.country=p.country;ui.cat=p.cat;go('profile');break;}
+    case 'mode':ui.mode=v;render();break;
+    case 'country':ui.country=v;render();break;
+    case 'cat':ui.cat=v;render();break;
+    case 'allCat':ui.allCat=v;render();break;
+    case 'askDel':ui.confirmDel=id;render();break;
+    case 'cancelDel':ui.confirmDel=null;render();break;
+    case 'del':{const l=data.logs[id];const cat=place(l).cat;delete data.logs[id];data.order[cat]=data.order[cat].filter(x=>x!==id);ui.confirmDel=null;save();toast('Deleted');break;}
+    case 'share':ui.share=v;ui.shareTo=[];go('share');break;
+    case 'friend':ui.shareTo=ui.shareTo.includes(v)?ui.shareTo.filter(f=>f!==v):ui.shareTo.concat(v);render();break;
+    case 'send':{const names=ui.shareTo.join(' and ');ui.shareTo=[];toast('Sent to '+names);break;}
+    case 'copy':{try{navigator.clipboard&&navigator.clipboard.writeText('https://meetme.app/maya/'+ui.share.toLowerCase());}catch(e){}toast('Link copied');break;}
+    case 'fakeSignup':toast('This would open sign-up');break;
+    case 'reset':data=seedData(v==='empty');ui.country=null;ui.cat='hostel';ui.mode='country';save();toast(v==='empty'?'Starting as a new user':'Sample data restored');break;
+  }
+}
+function startDraft(pid){
+  const p=data.places[pid];
+  ui.draft={placeId:pid,cat:p.cat,photo:false,visitMode:'now',month:'2025-12',reaction:null,pos:0,tags:[],warn:[],tip:'',vis:'friends',delay:'24h'};
+  go('log-details');
+}
+
+document.getElementById('app').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;act(b.dataset.a,b);});
+document.getElementById('app').addEventListener('input',e=>{
+  const t=e.target,k=t.dataset.in;if(!k)return;
+  if(k==='q'){ui.q=t.value;const r=document.getElementById('results');if(r)r.innerHTML=results();}
+  else if(k==='tip'){ui.draft.tip=t.value;}
+  else if(k==='vm'||k==='vy'){const [y,m]=ui.draft.month.split('-');ui.draft.month=k==='vm'?y+'-'+t.value:t.value+'-'+m;}
+});
+render();
+</script>
+</body>
+</html>
