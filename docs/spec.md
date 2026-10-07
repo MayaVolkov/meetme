@@ -352,6 +352,7 @@ The biggest risks are an empty app at launch and Beli expanding into travel. Sev
 - QR code friend adding
 - Global feed
 - Map view of your trail
+- "Been there" logs without a ranking (no comparisons, no score), e.g. for quick stops; could feed the map view
 - Quarterly "meetme favourites" lists by area
 - Printed trip books
 - Group swiping, challenges, badges, streaks, crawls, Lucky Spin

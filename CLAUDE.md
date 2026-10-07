@@ -58,7 +58,11 @@ Ask Maya before adding any new library or service, and explain why it's needed.
 - A **log** stores: place (Google Place ID or dropped pin), country and city, category, reaction (loved / fine / disliked), position within its reaction group, optional photos, optional "best for" and "heads up" tags, optional tip, visit month, visibility, delay, author, created time.
 - **Scores are calculated, never stored.** Reaction sets the range (loved 7 to 10, fine 4 to 7, disliked 0 to 4); position within the reaction group sets the score inside that range.
 - **Ranking** happens per user, per category, across all countries. Lists are displayed filtered by country.
-- **Comparisons** use binary search within the same category and reaction group, so logging takes only a few comparisons.
+- **Comparisons** use binary search within the same category and reaction group, so logging takes only a few comparisons. Answers:
+  - **Pick one:** halve the range as normal.
+  - **Too close to call:** place the new log right below the compared place and stop.
+  - **Skip** ("I don't remember that place"): set that place aside for the rest of this log and ask about the closest remaining place to the middle instead, alternating above then below. No limit on skips. If every place in the range has been skipped, place the new log in the middle of the remaining range.
+- **Tests** use Jest (`jest-expo`).
 - Categories for now: hostel, restaurant, beach, activity. Tag lists are in the spec.
 
 ## Security rules
