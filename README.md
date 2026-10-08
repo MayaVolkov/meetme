@@ -3,7 +3,7 @@
 
 **Never lose a travel rec again.** meetme is a mobile app where backpackers log the places they visit, rank them in a few quick taps, and share ranked country lists with friends heading there next.
 
-**[Try the clickable prototype](EDIT-paste-your-github-pages-link-here)**
+**[Try the clickable prototype](https://mayavolkov.github.io/meetme/docs/prototype.html)**
 
 <!-- EDIT: add a screenshot or short GIF of the prototype here, e.g. -->
 <!-- ![meetme prototype](docs/prototype-screenshot.png) -->
