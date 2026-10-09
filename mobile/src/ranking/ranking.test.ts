@@ -1,4 +1,5 @@
-import { calculateScore , roundScore, SCORE_RANGES, scoreForReaction } from "./ranking"; 
+import { SAMPLE_LOGS } from "@/data/sampleLogs";
+import { calculateScore , roundScore, SCORE_RANGES, scoreForReaction, getGroup } from "./ranking"; 
 
 test("2nd of 3 loved places scores 8.5" , () => {
     expect(calculateScore(10,7,1,3)).toBe(8.5)
@@ -25,5 +26,15 @@ test("score ranges have the right numbers", () => {
 })
 
 test("score for reactions", () => {
-    expect(scoreForReaction("fine", 1, 4)).toBe(5.875)
+    expect(scoreForReaction("fine", 1, 4)).toBe(5.875
+    )
 })
+
+test("length of array logs", () =>{
+    expect(getGroup(SAMPLE_LOGS, "hostel", "loved").length).toBe(3);
+})
+/*
+test("Aegean Nest Hostel", () => {
+    expect(getGroup(SAMPLE_LOGS, "hostel", "loved")[0].placeName).toBe("Aegean Nest Hostel")
+})
+    */ 
