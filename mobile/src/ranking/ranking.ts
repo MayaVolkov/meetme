@@ -1,3 +1,11 @@
+//defining the score ranges so we doesnt have to remember all the numbers
+export const SCORE_RANGES = {
+    loved: {top:10, bottom:7},
+    fine: {top:7, bottom:4}, 
+    disliked: {top:4, bottom:0}
+};
+
+
 // function that takes in the top/bottom number of that ranking group, the position of that logged item, and the size of the group and outputs that items score
 export function calculateScore(top:number, bottom:number, position:number, groupSize:number): number{
     // because new items are logged, we have to keep the scoring dynamic
@@ -7,4 +15,9 @@ export function calculateScore(top:number, bottom:number, position:number, group
     // position is a whole number, by adding 0.5 it ensures the final ranking doesnt land on either edge case (for example for loved it, it wouldnt land on 7 or 10)
     const score = top -(sliceWidth * (position + 0.5));
     return score; 
+}
+//Rounds a score to one decimal for display, so it's easy to read on a phone
+//separate from calculateScore so that averaging personal scores into public scores is more accurate
+export function roundScore(score:number) : number{
+    return Math.round(score * 10) / 10; 
 }

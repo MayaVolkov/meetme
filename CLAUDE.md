@@ -56,7 +56,7 @@ Ask Maya before adding any new library or service, and explain why it's needed.
 ## Core data rules
 
 - A **log** stores: place (Google Place ID or dropped pin), country and city, category, reaction (loved / fine / disliked), position within its reaction group, optional photos, optional "best for" and "heads up" tags, optional tip, visit month, visibility, delay, author, created time.
-- **Scores are calculated, never stored.** Reaction sets the range (loved 7 to 10, fine 4 to 7, disliked 0 to 4); position within the reaction group sets the score inside that range.
+- **Scores are calculated, never stored.** Reaction sets the range (loved 7 to 10, fine 4 to 7, disliked 0 to 4); position within the reaction group sets the score inside that range. `calculateScore` returns the exact value; round to one decimal only when displaying (`roundScore`), so later maths like public score averages uses exact numbers.
 - **Ranking** happens per user, per category, across all countries. Lists are displayed filtered by country.
 - **Comparisons** use binary search within the same category and reaction group, so logging takes only a few comparisons. Answers:
   - **Pick one:** halve the range as normal.

@@ -369,4 +369,5 @@ The biggest risks are an empty app at launch and Beli expanding into travel. Sev
 - [ ] Safety and moderation details: reporting flow, fake reviews
 - [ ] Start building with Claude Code: step 1, project setup on Maya's phone
 - [ ] Test the ranking and tag math in Python with fake data
+- [ ] Public scores with 0 or few reviews: the Bayesian average shows an unreviewed place as the city average, and softens a single real warning (one 0 shows as about 5.8). Options: hide the public score below a minimum number of reviews (like the 3-person tag threshold), show the review count next to the score ("5.8 · 1 review"), and rely on friends' scores, tips, and heads-up tags to carry warnings
 - [ ] Launch timing relative to the fall wave
