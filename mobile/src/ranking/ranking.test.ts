@@ -1,4 +1,4 @@
-import { calculateScore , roundScore, SCORE_RANGES } from "./ranking"; 
+import { calculateScore , roundScore, SCORE_RANGES, scoreForReaction } from "./ranking"; 
 
 test("2nd of 3 loved places scores 8.5" , () => {
     expect(calculateScore(10,7,1,3)).toBe(8.5)
@@ -22,4 +22,8 @@ test("8.5 rounds to 8.5" , () => {
 test("score ranges have the right numbers", () => {
     expect(SCORE_RANGES.fine.top).toBe(7)
     expect(SCORE_RANGES.disliked.top).toBe(4)
+})
+
+test("score for reactions", () => {
+    expect(scoreForReaction("fine", 1, 4)).toBe(5.875)
 })
