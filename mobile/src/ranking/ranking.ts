@@ -44,8 +44,12 @@ export function scoreForReaction(reaction:Reaction, position:number, groupSize:n
     const score_range = SCORE_RANGES[reaction];
     return calculateScore(score_range.top, score_range.bottom, position,groupSize);
 };
-
-export function getGroup(logs:Log[], category:Category , reaction:Reaction):Log[]{
-    return logs.filter((log) => log.category === category && log.reaction === reaction); 
+// this function takes all the logs and outputs the ones that match our requriements 
+export function getGroup(allLogs:Log[], category:Category , reaction:Reaction):Log[]{
+    //iterating through all 13 logs in logs, seeing if the category and reaction match what we are looking for and returns it
+    const unsortedGroup = allLogs.filter((currentLog) => currentLog.category === category && currentLog.reaction === reaction); 
+// sorting the filtered group based on the following logic:
+//
+    return unsortedGroup.sort((a, b)=> a.position - b.position); 
 
 };

@@ -33,8 +33,8 @@ test("score for reactions", () => {
 test("length of array logs", () =>{
     expect(getGroup(SAMPLE_LOGS, "hostel", "loved").length).toBe(3);
 })
-/*
+
 test("Aegean Nest Hostel", () => {
     expect(getGroup(SAMPLE_LOGS, "hostel", "loved")[0].placeName).toBe("Aegean Nest Hostel")
 })
-    */ 
+    
