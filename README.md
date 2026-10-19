@@ -20,6 +20,8 @@ Instead of typing a wall of text from memory, travelers log places as they go, w
 
 Think of it as Beli (the restaurant ranking app) for backpackers, covering hostels, food, beaches, and activities instead of just restaurants.
 
+**[Read the user stories](docs/user-stories.md)** to see what meetme does from each user's point of view, with acceptance criteria and build status.
+
 ## How it works
 
 ### Logging a place
@@ -70,8 +72,9 @@ meetme/
 ├── CLAUDE.md          # Working guide for building with Claude Code
 ├── README.md          # This file
 └── docs/
-    ├── spec.md        # Full product spec
-    └── prototype.html # Clickable prototype with working ranking logic
+    ├── spec.md         # Full product spec
+    ├── user-stories.md # User stories with acceptance criteria and status
+    └── prototype.html  # Clickable prototype with working ranking logic
 ```
 
 App code will be added as the build progresses.
